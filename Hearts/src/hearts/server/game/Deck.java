@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Deck {
 	private ArrayList<Card> myDeck;
+	public static final int numCards = 52;
 	
 	public Deck()
 	{
@@ -16,6 +17,8 @@ public class Deck {
 				myDeck.add(new Card(s, v));
 			}
 		}
+		if(myDeck.size() != numCards)
+			System.out.println("Not the right number of cards!");
 	}
 	
 	public void shuffle()
