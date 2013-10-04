@@ -16,6 +16,7 @@ public class Game {
 	
 	private int roundsPlayed;
 	private boolean heartsBroken;
+	private int leadPlayerNum;
 	
 	public Game()
 	{
@@ -26,6 +27,7 @@ public class Game {
 		gameScores = new ArrayList<Integer>();
 		roundsPlayed = 0;
 		heartsBroken = false;
+		leadPlayerNum = -1;
 	}
 	
 	public void addPlayer(Player p)
@@ -59,15 +61,40 @@ public class Game {
 	
 	public void promptPlayers()
 	{
-		for(Player p : myPlayers)
+		if(leadPlayerNum == -1)
 		{
+			//find player with 2 of clubs
+			for(int i = 0; i < numPlayers; i++)
+			{
+				if(myPlayers.get(i).have2Clubs())
+				{
+					leadPlayerNum = i;
+					break;
+				}
+			}
 			
+		}
+		
+		// Hackish while loop to loop around list
+		int numPlayed = 0;
+		int index = leadPlayerNum;
+		while(numPlayed < numPlayers)
+		{
+			myPlayers.get(index).playCardPrompt();
+			
+			index++;
+			if(index >= numPlayers)
+				index = 0;
+			
+			numPlayed++;
 		}
 	}
 	
 	public void playCard(Player p, Card c)
 	{
 		myTable.playCard(myPlayers.indexOf(p), c);
+		
+		System.out.println(p.toString() + " played " + c.toString());
 	}
 	
 	public void updateMatchScore()
@@ -90,6 +117,8 @@ public class Game {
 				gameScores.set(i, 0);
 			}
 		}
+		
+		leadPlayerNum = -1;
 	}
 	
 	public void addTrickPoints(int playerNum)
@@ -105,6 +134,8 @@ public class Game {
 			else if(c.getSuit() == Suit.SPADES && c.getValue() == Value.QUEEN)
 				gameScores.set(playerNum, gameScores.get(playerNum) + 13);
 		}
+		
+		leadPlayerNum = playerNum;
 	}
 	
 	public void incrementRound()
@@ -116,6 +147,8 @@ public class Game {
 	{
 		roundsPlayed = 0;
 		heartsBroken = false;
+		leadPlayerNum = -1;
+		myTable = new Table();
 	}
 	
 	public int getRoundsPlayed()
@@ -148,6 +181,11 @@ public class Game {
 	public Deck getDeck()
 	{
 		return myDeck;
+	}
+	
+	public String toString()
+	{
+		return myPlayers.toString();
 	}
 	
 }

@@ -6,7 +6,15 @@ import hearts.server.game.Suit;
 
 public class ComputerPlayer extends Player {
 	
+	public ComputerPlayer()
+	{
+		super();
+	}
 	
+	public ComputerPlayer(String name)
+	{
+		super(name);
+	}
 
 	@Override
 	public void run() {
@@ -19,17 +27,40 @@ public class ComputerPlayer extends Player {
 		Suit leadSuit = myServer.getGame().getTable().getLeadSuit();
 		if(leadSuit == null)
 		{
-			//choose suit at random and play lowest card
-			Random r = new Random();
-			
-			//if hearts are broken
-			if(myServer.getGame().getHeartsBroken())
-			{
-				playCard(handBySuit.get(r.nextInt(4)).get(0));
-			}
+			// Have to play 2 of clubs first
+			if(have2Clubs())
+				playCard(handBySuit.get(0).get(0));
 			else
 			{
-				playCard(handBySuit.get(r.nextInt(3)).get(0));
+				//choose suit at random and play lowest card
+				Random r = new Random();
+				
+				//if hearts are broken
+				//TODO need to fix to handle case if suit picked is empty
+				if(myServer.getGame().getHeartsBroken())
+				{
+					while(true)
+					{
+						int suit = r.nextInt(4);
+						if(handBySuit.get(suit).size() > 0)
+						{
+							playCard(handBySuit.get(suit).get(0));
+							break;
+						}
+					}
+				}
+				else
+				{
+					while(true)
+					{
+						int suit = r.nextInt(3);
+						if(handBySuit.get(suit).size() > 0)
+						{
+							playCard(handBySuit.get(suit).get(0));
+							break;
+						}
+					}
+				}
 			}
 		} else {
 			//check if you have cards of lead suit
@@ -70,7 +101,8 @@ public class ComputerPlayer extends Player {
 			
 			if(haveLeadSuit == false)
 			{
-				
+				//play random card for now
+				playCard(hand.get(new Random().nextInt(hand.size()-1)));
 			}
 		}
 		

@@ -36,7 +36,7 @@ public class Table {
 		int highestValue = -1;
 		int playerNum = -1;
 		
-		for(int i = 0; i > Game.numPlayers; i++)
+		for(int i = 0; i < Game.numPlayers; i++)
 		{
 			Card current = playedCards[i];
 			if(current.getSuit().equals(leadSuit))
@@ -61,4 +61,22 @@ public class Table {
 	{
 		return leadSuit;
 	}
+	
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		for(int i = 0; i < playedCards.length; i++)
+		{
+			if(playedCards[i] == null)
+				sb.append("null");
+			else
+				sb.append(playedCards[i].toString());
+			sb.append(",");
+		}
+		sb.append("]");
+		
+		return sb.toString();
+	}
+	
 }

@@ -22,4 +22,9 @@ public class Card {
 	{
 		return myValue + " of " + mySuit;
 	}
+	
+	public boolean equals(Card c)
+	{
+		return mySuit == c.getSuit() && myValue == c.getValue();
+	}
 }

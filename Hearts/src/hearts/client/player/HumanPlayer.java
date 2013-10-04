@@ -1,23 +1,39 @@
 package hearts.client.player;
 
+import hearts.server.game.Card;
+import hearts.server.game.Deck;
+import hearts.server.game.Suit;
+
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class HumanPlayer extends Player {
 
+	Scanner keyboard;
 	public static void main(String[] args)
 	{
-		System.out.println("Hello");
-		HumanPlayer h = new HumanPlayer("sup");
+		ArrayList<Card> a = new ArrayList<Card>();
+		ArrayList<ArrayList<Card>> b = new ArrayList<ArrayList<Card>>();
+		Deck d = new Deck();
+		
+		a.add(d.getDeck().get(0));
+		b.add(a);
+		a.remove(0);
+		
+		System.out.println(("spads".equals(Suit.SPADES)));
+		
 	}
 	
 	public HumanPlayer()
 	{
-		super();
+		this("");
+		
 	}
 	
 	public HumanPlayer(String name)
 	{
 		super(name);
+		keyboard = new Scanner(System.in);
 	}
 
 	@Override
@@ -25,10 +41,127 @@ public class HumanPlayer extends Player {
 		// TODO Auto-generated method stub
 		
 	}
+	public void kill()
+	{
+		keyboard.close();
+	}
 
 	@Override
 	public void playCardPrompt() {
-		// TODO Auto-generated method stub
+		System.out.println();
+		System.out.println(printHand());
+		
+		chooseSuit();
 		
 	}
+	
+	private void chooseSuit()
+	{
+		Suit leadSuit = myServer.getGame().getTable().getLeadSuit();
+		boolean chosen = false;
+		
+		if(leadSuit != null)
+		{
+			System.out.println("Lead suit is " + leadSuit.toString());
+			if(leadSuit == Suit.CLUBS)
+				chooseCard(0);
+			if(leadSuit == Suit.DIAMONDS)
+				chooseCard(1);
+			if(leadSuit == Suit.SPADES)
+				chooseCard(2);
+			if(leadSuit == Suit.HEARTS)
+				chooseCard(3);
+			chosen = true;			
+		}
+		while(!chosen)
+		{
+			System.out.print("Choose your suit: ");
+			String suit = keyboard.next();
+			
+			suit = suit.trim();
+			suit = suit.toLowerCase();
+			
+			if(suit.equals("clubs"))
+			{
+				if(clubs.size() == 0)
+				{
+					System.out.println("You're out of that suit");
+				} else {
+					//choose card
+					chooseCard(0);
+					chosen = true;
+				}
+			} 
+			else if(suit.equals("diamonds"))
+			{
+				if(diamonds.size() == 0)
+				{
+					System.out.println("You're out of that suit");
+				} else {
+					//choose card
+					chooseCard(1);
+					chosen = true;
+				}
+			}
+			else if(suit.equals("spades"))
+			{
+				if(spades.size() == 0)
+				{
+					System.out.println("You're out of that suit");
+				} else {
+					//choose card
+					chooseCard(2);
+					chosen = true;
+				}
+			}
+			else if(suit.equals("hearts"))
+			{
+				if(hearts.size() == 0)
+				{
+					System.out.println("You're out of that suit");
+				} else {
+					//choose card
+					chooseCard(3);
+					chosen = true;
+				}
+			}
+			else
+			{
+				System.out.println("That's not a suit!");
+			}
+			System.out.println();
+		}
+	}
+	
+	private void chooseCard(int suitNum)
+	{
+		boolean played = false;
+		while(!played)
+		{
+			if(suitNum == 0)
+				System.out.println(printClubs());
+			else if(suitNum == 1)
+				System.out.println(printDiamonds());
+			else if(suitNum == 2)
+				System.out.println(printSpades());
+			else if(suitNum == 3)
+				System.out.println(printHearts());
+			else
+				System.out.println("Invalid suit num chosen!");
+
+			System.out.print("Choose the index of the card (starting with 1): ");
+			int index = keyboard.nextInt();
+			if(index < 1 || index > handBySuit.get(suitNum).size())
+			{
+				System.out.println("Invalid index\n");
+			}
+			else
+			{
+				playCard(handBySuit.get(suitNum).get(index-1));
+				played = true;
+			}
+		}
+	}
+	
+	
 }

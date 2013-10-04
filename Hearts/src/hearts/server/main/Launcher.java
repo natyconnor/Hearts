@@ -1,5 +1,6 @@
 package hearts.server.main;
 
+import hearts.client.player.ComputerPlayer;
 import hearts.client.player.HumanPlayer;
 import hearts.server.game.*;
 
@@ -13,9 +14,9 @@ public class Launcher {
 		
 		//Add players to server/game
 		HumanPlayer h1 = new HumanPlayer("Player1");
-		HumanPlayer h2 = new HumanPlayer("Player2");
-		HumanPlayer h3 = new HumanPlayer("Player3");
-		HumanPlayer h4 = new HumanPlayer("Player4");
+		ComputerPlayer h2 = new ComputerPlayer("Player2");
+		ComputerPlayer h3 = new ComputerPlayer("Player3");
+		ComputerPlayer h4 = new ComputerPlayer("Player4");
 		
 		h1.setServer(server);
 		h2.setServer(server);
@@ -26,6 +27,7 @@ public class Launcher {
 		server.getGame().addPlayer(h2);
 		server.getGame().addPlayer(h3);
 		server.getGame().addPlayer(h4);
+		
 		
 		//Game loop; while high score is less than 100
 		while(server.getGame().getHighScore() < 100)
@@ -41,6 +43,7 @@ public class Launcher {
 			{
 			
 				//ask each player to play a card
+				server.getGame().promptPlayers();
 				
 				//see who takes trick
 				int winningPlayer = server.getGame().getTable().takeTrick();
@@ -52,6 +55,9 @@ public class Launcher {
 				server.getGame().getTable().clearTable();
 				
 				server.getGame().incrementRound();
+				
+				System.out.println("\n-----------------------------------------\n");
+
 			}
 			
 			//update match score from game score
