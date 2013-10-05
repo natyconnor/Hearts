@@ -106,6 +106,20 @@ abstract public class Player {
 		}
 	}
 	
+	protected boolean hasSuit(Suit s)
+	{
+		if(s == Suit.CLUBS)
+			return clubs.size() > 0;
+		else if(s == Suit.DIAMONDS)
+			return diamonds.size() > 0;
+		else if(s == Suit.SPADES)
+			return spades.size() > 0;
+		else if(s == Suit.HEARTS)
+			return hearts.size() > 0;
+		else
+			return false;
+	}
+	
 	public boolean equals(Player p)
 	{
 		return myName.equals(p.myName);

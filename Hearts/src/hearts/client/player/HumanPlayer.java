@@ -3,6 +3,7 @@ package hearts.client.player;
 import hearts.server.game.Card;
 import hearts.server.game.Deck;
 import hearts.server.game.Suit;
+import hearts.server.game.Value;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -62,19 +63,31 @@ public class HumanPlayer extends Player {
 		
 		if(leadSuit != null)
 		{
-			System.out.println("Lead suit is " + leadSuit.toString());
-			if(leadSuit == Suit.CLUBS)
-				chooseCard(0);
-			if(leadSuit == Suit.DIAMONDS)
-				chooseCard(1);
-			if(leadSuit == Suit.SPADES)
-				chooseCard(2);
-			if(leadSuit == Suit.HEARTS)
-				chooseCard(3);
-			chosen = true;			
+			// TODO handle if user doesn't have lead suit
+			
+			//If has lead suit skip to choosing suit
+			if(hasSuit(leadSuit))
+			{
+				System.out.println("Lead suit is " + leadSuit.toString());
+				if(leadSuit == Suit.CLUBS)
+					chooseCard(0);
+				if(leadSuit == Suit.DIAMONDS)
+					chooseCard(1);
+				if(leadSuit == Suit.SPADES)
+					chooseCard(2);
+				if(leadSuit == Suit.HEARTS)
+					chooseCard(3);
+				chosen = true;
+			}
+			else
+			{
+				System.out.println("You don't have lead suit!");
+			}
 		}
 		else
 		{
+			//If there is no lead suit
+			System.out.println("You're leading.");
 			if(have2Clubs())
 			{
 				playCard(handBySuit.get(0).get(0));
@@ -82,9 +95,10 @@ public class HumanPlayer extends Player {
 				System.out.println("\n***You had the 2 of Clubs. It's been played for you.***\n");
 			}
 		}
+		
+		// If suit hasn't been chosen yet
 		while(!chosen)
 		{
-			System.out.println("You're leading.");
 			System.out.print("Choose your suit: ");
 			String suit = keyboard.next();
 			
@@ -126,7 +140,11 @@ public class HumanPlayer extends Player {
 			}
 			else if(suit.equals("hearts"))
 			{
-				if(hearts.size() == 0)
+				if(myServer.getGame().getRoundsPlayed() == 0)
+				{
+					System.out.println("Can't play points on first round!");
+				}
+				else if(hearts.size() == 0)
 				{
 					System.out.println("You're out of that suit");
 				}
@@ -166,16 +184,30 @@ public class HumanPlayer extends Player {
 				System.out.println("Invalid suit num chosen!");
 
 			System.out.print("Choose the index of the card (starting with 1): ");
-			// TODO handle if user inputs garbage here
-			int index = keyboard.nextInt();
+
+			int index = 0;
+			if (keyboard.hasNextInt()) {
+				index = keyboard.nextInt();
+			} else {
+				keyboard.next(); //garbage step to process line and move on
+			}
+
 			if(index < 1 || index > handBySuit.get(suitNum).size())
 			{
 				System.out.println("Invalid index\n");
 			}
 			else
 			{
-				playCard(handBySuit.get(suitNum).get(index-1));
-				played = true;
+				// check if trying to play the queen of spades on first round
+				if(suitNum == 2 && handBySuit.get(suitNum).get(index-1).getValue() == Value.QUEEN && myServer.getGame().getRoundsPlayed() == 0)
+				{
+					System.out.println("Can't play points on the first round. Even the Queen!");
+				}
+				else
+				{
+					playCard(handBySuit.get(suitNum).get(index-1));
+					played = true;
+				}
 			}
 		}
 	}

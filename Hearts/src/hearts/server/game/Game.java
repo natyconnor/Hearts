@@ -143,7 +143,7 @@ public class Game {
 		
 		leadPlayerNum = playerNum;
 		
-		System.out.println(myPlayers.get(playerNum).toString() + " took the trick!");
+		System.out.println("\n" + myPlayers.get(playerNum).toString() + " took the trick!");
 	}
 	
 	public void incrementRound()

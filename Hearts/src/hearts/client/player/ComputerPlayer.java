@@ -3,6 +3,7 @@ package hearts.client.player;
 import java.util.Random;
 
 import hearts.server.game.Suit;
+import hearts.server.game.Value;
 
 public class ComputerPlayer extends Player {
 	
@@ -37,9 +38,7 @@ public class ComputerPlayer extends Player {
 				//choose suit at random and play lowest card
 				Random r = new Random();
 				
-				//if hearts are broken
-				//TODO need to fix to handle case if suit picked is empty
-				
+				//if hearts are broken				
 				if(myServer.getGame().getHeartsBroken())
 				{
 					while(true)
@@ -113,10 +112,11 @@ public class ComputerPlayer extends Player {
 					//Can't play hearts
 					while(true)
 					{
-						int suit = r.nextInt(3);
-						if(handBySuit.get(suit).size() > 0)
+						int suitNum = r.nextInt(3);
+						// Make sure suit is not empty and biggest card of suit is not Queen of spades
+						if(handBySuit.get(suitNum).size() > 0 && !(suitNum == 2 && handBySuit.get(suitNum).get(handBySuit.get(suitNum).size()-1).getValue() == Value.QUEEN))
 						{
-							playCard(handBySuit.get(suit).get(handBySuit.get(suit).size()-1));
+							playCard(handBySuit.get(suitNum).get(handBySuit.get(suitNum).size()-1));
 							break;
 						}
 					}
