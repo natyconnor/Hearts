@@ -73,8 +73,18 @@ public class HumanPlayer extends Player {
 				chooseCard(3);
 			chosen = true;			
 		}
+		else
+		{
+			if(have2Clubs())
+			{
+				playCard(handBySuit.get(0).get(0));
+				chosen = true;
+				System.out.println("\n***You had the 2 of Clubs. It's been played for you.***\n");
+			}
+		}
 		while(!chosen)
 		{
+			System.out.println("You're leading.");
 			System.out.print("Choose your suit: ");
 			String suit = keyboard.next();
 			
@@ -119,7 +129,13 @@ public class HumanPlayer extends Player {
 				if(hearts.size() == 0)
 				{
 					System.out.println("You're out of that suit");
-				} else {
+				}
+				else if(!myServer.getGame().getHeartsBroken())
+				{
+					System.out.println("Hearts haven't been broken yet!");
+				}
+				else
+				{
 					//choose card
 					chooseCard(3);
 					chosen = true;
@@ -150,6 +166,7 @@ public class HumanPlayer extends Player {
 				System.out.println("Invalid suit num chosen!");
 
 			System.out.print("Choose the index of the card (starting with 1): ");
+			// TODO handle if user inputs garbage here
 			int index = keyboard.nextInt();
 			if(index < 1 || index > handBySuit.get(suitNum).size())
 			{

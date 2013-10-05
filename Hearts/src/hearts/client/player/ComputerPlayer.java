@@ -25,6 +25,8 @@ public class ComputerPlayer extends Player {
 	@Override
 	public void playCardPrompt() {
 		Suit leadSuit = myServer.getGame().getTable().getLeadSuit();
+		
+		//if leading
 		if(leadSuit == null)
 		{
 			// Have to play 2 of clubs first
@@ -37,6 +39,7 @@ public class ComputerPlayer extends Player {
 				
 				//if hearts are broken
 				//TODO need to fix to handle case if suit picked is empty
+				
 				if(myServer.getGame().getHeartsBroken())
 				{
 					while(true)
@@ -63,7 +66,7 @@ public class ComputerPlayer extends Player {
 				}
 			}
 		} else {
-			//check if you have cards of lead suit
+			//following; check if you have cards of lead suit
 			boolean haveLeadSuit = true;
 			if(leadSuit == Suit.CLUBS)
 			{
@@ -98,11 +101,38 @@ public class ComputerPlayer extends Player {
 					haveLeadSuit = false;
 				}
 			}
-			
+			//If following but don't have lead suit
 			if(haveLeadSuit == false)
 			{
-				//play random card for now
-				playCard(hand.get(new Random().nextInt(hand.size()-1)));
+				//Play largest card from random suit
+				Random r = new Random();
+				
+				//if first round
+				if(myServer.getGame().getRoundsPlayed() == 0)
+				{
+					//Can't play hearts
+					while(true)
+					{
+						int suit = r.nextInt(3);
+						if(handBySuit.get(suit).size() > 0)
+						{
+							playCard(handBySuit.get(suit).get(handBySuit.get(suit).size()-1));
+							break;
+						}
+					}
+				}
+				else
+				{
+					while(true)
+					{
+						int suit = r.nextInt(4);
+						if(handBySuit.get(suit).size() > 0)
+						{
+							playCard(handBySuit.get(suit).get(handBySuit.get(suit).size()-1));
+							break;
+						}
+					}
+				}
 			}
 		}
 		

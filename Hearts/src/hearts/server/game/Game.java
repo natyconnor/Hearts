@@ -118,6 +118,12 @@ public class Game {
 			}
 		}
 		
+		System.out.println("--------------------------------------\n");
+		for(int i = 0; i < numPlayers; i++)
+		{
+			System.out.println(myPlayers.get(i).toString() + " has " + matchScores.get(i).toString() + " points.");
+		}
+		
 		leadPlayerNum = -1;
 	}
 	
@@ -136,6 +142,8 @@ public class Game {
 		}
 		
 		leadPlayerNum = playerNum;
+		
+		System.out.println(myPlayers.get(playerNum).toString() + " took the trick!");
 	}
 	
 	public void incrementRound()

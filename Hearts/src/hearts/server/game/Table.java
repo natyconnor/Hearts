@@ -1,7 +1,5 @@
 package hearts.server.game;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-
 public class Table {
 	private Card[] playedCards; //array for the 4 cards played that round by the players
 	private Suit leadSuit;
