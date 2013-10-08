@@ -93,8 +93,11 @@ public class Game {
 	public void playCard(Player p, Card c)
 	{
 		myTable.playCard(myPlayers.indexOf(p), c);
-		
 		System.out.println(p.toString() + " played " + c.toString());
+		if(c.getSuit() == Suit.HEARTS && heartsBroken == false){
+			heartsBroken = true;
+			System.out.println("\nHearts has been broken!\n");
+		}
 	}
 	
 	public void updateMatchScore()
@@ -134,8 +137,6 @@ public class Game {
 			if(c.getSuit() == Suit.HEARTS)
 			{
 				gameScores.set(playerNum, gameScores.get(playerNum) + 1);
-				if(heartsBroken == false)
-					heartsBroken = true;
 			}
 			else if(c.getSuit() == Suit.SPADES && c.getValue() == Value.QUEEN)
 				gameScores.set(playerNum, gameScores.get(playerNum) + 13);

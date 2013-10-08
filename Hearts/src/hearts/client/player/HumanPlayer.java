@@ -60,6 +60,7 @@ public class HumanPlayer extends Player {
 	{
 		Suit leadSuit = myServer.getGame().getTable().getLeadSuit();
 		boolean chosen = false;
+		boolean lead = false;
 		
 		if(leadSuit != null)
 		{
@@ -87,6 +88,7 @@ public class HumanPlayer extends Player {
 		{
 			//If there is no lead suit
 			System.out.println("You're leading.");
+			lead = true;
 			if(have2Clubs())
 			{
 				playCard(handBySuit.get(0).get(0));
@@ -151,7 +153,18 @@ public class HumanPlayer extends Player {
 				}
 				else if(!myServer.getGame().getHeartsBroken())
 				{
-					System.out.println("Hearts haven't been broken yet!");
+					// If I'm able to pick my suit I'm either leading or out of the suit
+					
+					//If I'm leading and I have any other suit of cards, I can't play hearts
+					if(lead && (clubs.size() > 0 || diamonds.size() > 0 || spades.size() > 0))
+					{
+						System.out.println("Hearts haven't been broken yet!");
+					}
+					else // otherwise I'm out of lead suit so I can break hearts
+					{
+						chooseCard(3);
+						chosen = true;
+					}
 				}
 				else
 				{
