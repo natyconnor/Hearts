@@ -69,14 +69,7 @@ public class HumanPlayer extends Player {
 			if(hasSuit(leadSuit))
 			{
 				System.out.println("Lead suit is " + leadSuit.toString());
-				if(leadSuit == Suit.CLUBS)
-					chooseCard(0);
-				if(leadSuit == Suit.DIAMONDS)
-					chooseCard(1);
-				if(leadSuit == Suit.SPADES)
-					chooseCard(2);
-				if(leadSuit == Suit.HEARTS)
-					chooseCard(3);
+				chooseCard(leadSuit);
 				chosen = true;
 			}
 			else
@@ -91,7 +84,7 @@ public class HumanPlayer extends Player {
 			lead = true;
 			if(have2Clubs())
 			{
-				playCard(handBySuit.get(0).get(0));
+				playCard(handBySuit.get(Suit.CLUBS).get(0));
 				chosen = true;
 				System.out.println("\n***You had the 2 of Clubs. It's been played for you.***\n");
 			}
@@ -113,7 +106,7 @@ public class HumanPlayer extends Player {
 					System.out.println("You're out of that suit");
 				} else {
 					//choose card
-					chooseCard(0);
+					chooseCard(Suit.CLUBS);
 					chosen = true;
 				}
 			} 
@@ -124,7 +117,7 @@ public class HumanPlayer extends Player {
 					System.out.println("You're out of that suit");
 				} else {
 					//choose card
-					chooseCard(1);
+					chooseCard(Suit.DIAMONDS);
 					chosen = true;
 				}
 			}
@@ -135,7 +128,7 @@ public class HumanPlayer extends Player {
 					System.out.println("You're out of that suit");
 				} else {
 					//choose card
-					chooseCard(2);
+					chooseCard(Suit.SPADES);
 					chosen = true;
 				}
 			}
@@ -162,14 +155,14 @@ public class HumanPlayer extends Player {
 					}
 					else // otherwise I'm out of lead suit so I can break hearts
 					{
-						chooseCard(3);
+						chooseCard(Suit.HEARTS);
 						chosen = true;
 					}
 				}
 				else
 				{
 					//choose card
-					chooseCard(3);
+					chooseCard(Suit.HEARTS);
 					chosen = true;
 				}
 			}
@@ -181,22 +174,13 @@ public class HumanPlayer extends Player {
 		}
 	}
 	
-	private void chooseCard(int suitNum)
+	private void chooseCard(Suit suit)
 	{
 		boolean played = false;
 		while(!played)
 		{
-			if(suitNum == 0)
-				System.out.println(printClubs());
-			else if(suitNum == 1)
-				System.out.println(printDiamonds());
-			else if(suitNum == 2)
-				System.out.println(printSpades());
-			else if(suitNum == 3)
-				System.out.println(printHearts());
-			else
-				System.out.println("Invalid suit num chosen!");
-
+			System.out.println(printSuit(suit));
+			
 			System.out.print("Choose the index of the card (starting with 1): ");
 
 			int index = 0;
@@ -206,20 +190,20 @@ public class HumanPlayer extends Player {
 				keyboard.next(); //garbage step to process line and move on
 			}
 
-			if(index < 1 || index > handBySuit.get(suitNum).size())
+			if(index < 1 || index > handBySuit.get(suit).size())
 			{
 				System.out.println("Invalid index\n");
 			}
 			else
 			{
 				// check if trying to play the queen of spades on first round
-				if(suitNum == 2 && handBySuit.get(suitNum).get(index-1).getValue() == Value.QUEEN && myServer.getGame().getRoundsPlayed() == 0)
+				if(suit == Suit.SPADES && handBySuit.get(suit).get(index-1).getValue() == Value.QUEEN && myServer.getGame().getRoundsPlayed() == 0)
 				{
 					System.out.println("Can't play points on the first round. Even the Queen!");
 				}
 				else
 				{
-					playCard(handBySuit.get(suitNum).get(index-1));
+					playCard(handBySuit.get(suit).get(index-1));
 					played = true;
 				}
 			}

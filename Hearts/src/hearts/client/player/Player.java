@@ -4,6 +4,8 @@ import hearts.server.game.*;
 import hearts.server.main.Server;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Random;
 
 abstract public class Player {
 	ArrayList<Card> hand;
@@ -11,10 +13,12 @@ abstract public class Player {
 	ArrayList<Card> diamonds;
 	ArrayList<Card> spades;
 	ArrayList<Card> hearts;
-	ArrayList<ArrayList<Card>> handBySuit;
+	Hashtable<Suit,ArrayList<Card>> handBySuit;
 	int score;
 	String myName;
 	Server myServer;
+	
+	protected Random r;
 	
 	public Player()
 	{
@@ -30,8 +34,10 @@ abstract public class Player {
 		spades   = new ArrayList<Card>();
 		hearts   = new ArrayList<Card>();
 		
-		handBySuit = new ArrayList<ArrayList<Card>>();
+		handBySuit = new Hashtable<Suit,ArrayList<Card>>();
 		score = 0;
+		
+		r = new Random();
 	}
 	
 	public void setServer(Server s) 
@@ -69,10 +75,10 @@ abstract public class Player {
 		bubbleSortCards(spades);
 		bubbleSortCards(hearts);
 		
-		handBySuit.add(clubs);
-		handBySuit.add(diamonds);
-		handBySuit.add(spades);
-		handBySuit.add(hearts);
+		handBySuit.put(Suit.CLUBS, clubs);
+		handBySuit.put(Suit.DIAMONDS, diamonds);
+		handBySuit.put(Suit.SPADES, spades);
+		handBySuit.put(Suit.HEARTS, hearts);
 	}
 	
 	private void bubbleSortCards(ArrayList<Card> cards)
@@ -129,7 +135,7 @@ abstract public class Player {
 	
 	public abstract void playCardPrompt();
 	
-	public ArrayList<ArrayList<Card>> getHandBySuit()
+	public Hashtable<Suit, ArrayList<Card>> getHandBySuit()
 	{
 		return handBySuit;
 	}
@@ -161,7 +167,25 @@ abstract public class Player {
 		return printClubs() + printDiamonds() + printSpades() + printHearts();
 	}
 	
-	public String printClubs()
+	public String printSuit(Suit s)
+	{
+		switch(s)
+		{
+			case CLUBS:
+				return printClubs();
+			case DIAMONDS:
+				return printDiamonds();
+			case SPADES:
+				return printSpades();
+			case HEARTS:
+				return printHearts();
+			default:
+				System.out.println("Invalid Suit requested to print!");
+				return "";
+		}
+	}
+	
+	private String printClubs()
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("CLUBS: ");
@@ -171,7 +195,9 @@ abstract public class Player {
 		return sb.toString();
 	}
 	
-	public String printDiamonds()
+	
+	
+	private String printDiamonds()
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("DIAMONDS: ");
@@ -181,7 +207,7 @@ abstract public class Player {
 		return sb.toString();
 	}
 	
-	public String printSpades()
+	private String printSpades()
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("SPADES: ");
@@ -191,7 +217,7 @@ abstract public class Player {
 		return sb.toString();
 	}
 	
-	public String printHearts()
+	private String printHearts()
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("HEARTS: ");
