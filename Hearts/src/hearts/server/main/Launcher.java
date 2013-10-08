@@ -7,7 +7,6 @@ import hearts.server.game.*;
 public class Launcher {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		//Set up server (which sets up game)
 		Server server = new Server();

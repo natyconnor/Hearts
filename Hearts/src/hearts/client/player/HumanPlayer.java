@@ -63,7 +63,6 @@ public class HumanPlayer extends Player {
 		
 		if(leadSuit != null)
 		{
-			// TODO handle if user doesn't have lead suit
 			
 			//If has lead suit skip to choosing suit
 			if(hasSuit(leadSuit))
@@ -140,6 +139,8 @@ public class HumanPlayer extends Player {
 			}
 			else if(suit.equals("hearts"))
 			{
+				
+				//TODO handle hearts not being broken but having only hearts in hand and leading
 				if(myServer.getGame().getRoundsPlayed() == 0)
 				{
 					System.out.println("Can't play points on first round!");
