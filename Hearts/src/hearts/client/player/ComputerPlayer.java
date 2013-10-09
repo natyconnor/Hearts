@@ -42,97 +42,53 @@ public class ComputerPlayer extends Player {
 				//if hearts are broken or you're out of all other suits
 				if(myServer.getGame().getHeartsBroken() || (clubs.size() == 0 && diamonds.size() == 0 && spades.size() == 0))
 				{
-					while(true)
-					{
-						int suitNum = r.nextInt(4);
-						if(handBySuit.get(Suit.SUITS.get(suitNum)).size() > 0)
-						{
-							playCard(handBySuit.get(Suit.SUITS.get(suitNum)).get(0));
-							break;
-						}
-					}
+					//Play a random small card
+					playCard(getRandomSmallCard());
 				}
 				else
 				{
 					while(true)
 					{
-						int suitNum = r.nextInt(3);
-						if(handBySuit.get(Suit.SUITS.get(suitNum)).size() > 0)
+						//Play a random small card that's not a heart
+						Card c = getRandomSmallCard();
+						if(c.getSuit() != Suit.HEARTS)
 						{
-							playCard(handBySuit.get(Suit.SUITS.get(suitNum)).get(0));
+							playCard(c);
 							break;
 						}
 					}
 				}
 			}
-		} else {
-			//following; check if you have cards of lead suit
-			boolean haveLeadSuit = true;
-			if(leadSuit == Suit.CLUBS)
+		} else {			
+			//If you have the lead suit, play the smallest one
+			if(handBySuit.get(leadSuit).size() > 0)
 			{
-				if(handBySuit.get(Suit.CLUBS).size() > 0)
-				{
-					playCard(handBySuit.get(Suit.CLUBS).get(0));
-				} else {
-					haveLeadSuit = false;
-				}
-			} else if(leadSuit == Suit.DIAMONDS)
-			{
-				if(handBySuit.get(Suit.DIAMONDS).size() > 0)
-				{
-					playCard(handBySuit.get(Suit.DIAMONDS).get(0));
-				} else {
-					haveLeadSuit = false;
-				}
-			} else if(leadSuit == Suit.SPADES)
-			{
-				if(handBySuit.get(Suit.SPADES).size() > 0)
-				{
-					playCard(handBySuit.get(Suit.SPADES).get(0));
-				} else {
-					haveLeadSuit = false;
-				}
-			} else if(leadSuit == Suit.HEARTS)
-			{
-				if(handBySuit.get(Suit.HEARTS).size() > 0)
-				{
-					playCard(handBySuit.get(Suit.HEARTS).get(0));
-				} else {
-					haveLeadSuit = false;
-				}
+				playCard(handBySuit.get(leadSuit).get(0));
 			}
 			//If following but don't have lead suit
-			if(haveLeadSuit == false)
+			else
 			{
 				//Play largest card from random suit
 				
 				//if first round
 				if(myServer.getGame().getRoundsPlayed() == 0)
 				{
-					//Can't play hearts
+					//Can't play points
 					while(true)
 					{
-						int suitNum = r.nextInt(3);
-						// Make sure suit is not empty and biggest card of suit is not Queen of spades
-						if(handBySuit.get(Suit.SUITS.get(suitNum)).size() > 0 && !(suitNum == 2 && handBySuit.get(Suit.SUITS.get(suitNum)).get(handBySuit.get(Suit.SUITS.get(suitNum)).size()-1).getValue() == Value.QUEEN))
+						Card c = getRandomLargeCard();
+						
+						//Make sure suit is not hearts and if it's a spade, not the queen
+						if(c.getSuit() != Suit.HEARTS && !(c.getSuit() == Suit.SPADES && c.getValue() != Value.QUEEN))
 						{
-							playCard(handBySuit.get(Suit.SUITS.get(suitNum)).get(handBySuit.get(Suit.SUITS.get(suitNum)).size()-1));
+							playCard(c);
 							break;
 						}
 					}
 				}
 				else
 				{
-					while(true)
-					{
-						//Otherwise choose any random suit and play the largest card
-						int suitNum = r.nextInt(4);
-						if(handBySuit.get(Suit.SUITS.get(suitNum)).size() > 0)
-						{
-							playCard(handBySuit.get(Suit.SUITS.get(suitNum)).get(handBySuit.get(Suit.SUITS.get(suitNum)).size()-1));
-							break;
-						}
-					}
+					playCard(getRandomLargeCard());
 				}
 			}
 		}
@@ -153,13 +109,24 @@ public class ComputerPlayer extends Player {
 	
 	private Card getRandomLargeCard()
 	{
-		// TODO refactor so this code is used in playCardPrompt()
 		while(true)
 		{
 			Suit suit = Suit.SUITS.get(r.nextInt(4));
 			if(handBySuit.get(suit).size() > 0)
 			{
 				return handBySuit.get(suit).get(handBySuit.get(suit).size()-1);
+			}
+		}
+	}
+	
+	private Card getRandomSmallCard()
+	{
+		while(true)
+		{
+			Suit suit = Suit.SUITS.get(r.nextInt(4));
+			if(handBySuit.get(suit).size() > 0)
+			{
+				return handBySuit.get(suit).get(0);
 			}
 		}
 	}

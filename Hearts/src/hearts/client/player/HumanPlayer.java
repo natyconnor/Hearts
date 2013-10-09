@@ -1,11 +1,9 @@
 package hearts.client.player;
 
 import hearts.server.game.Card;
-import hearts.server.game.Deck;
 import hearts.server.game.Suit;
 import hearts.server.game.Value;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class HumanPlayer extends Player {
