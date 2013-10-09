@@ -21,5 +21,23 @@ public enum Suit {
 		return name.equals(s);
 	}
 	
+	public static Suit getSuitFromString(String s)
+	{
+		switch(s)
+		{
+			case "clubs":
+				return CLUBS;
+			case "diamonds":
+				return DIAMONDS;
+			case "spades":
+				return SPADES;
+			case "hearts":
+				return HEARTS;
+			default:
+				//System.out.println("Invalid Suit String!");
+				return null;
+		}
+	}
+	
 	public static final List<Suit> SUITS = Collections.unmodifiableList(Arrays.asList(values()));
 }

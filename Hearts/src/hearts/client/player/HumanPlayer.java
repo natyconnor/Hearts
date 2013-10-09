@@ -43,20 +43,13 @@ public class HumanPlayer extends Player {
 		System.out.println();
 		System.out.println(printHand());
 		
-		chooseSuit();
-		
-	}
-	
-	public void passCardPrompt()
-	{
-		
-	}
-	
-	private void chooseSuit()
-	{
 		Suit leadSuit = myServer.getGame().getTable().getLeadSuit();
 		boolean chosen = false;
+		boolean played = false;
 		boolean lead = false;
+		
+		Suit suitToPlay = leadSuit;
+		Card cardToPlay;
 		
 		if(leadSuit != null)
 		{
@@ -65,7 +58,8 @@ public class HumanPlayer extends Player {
 			if(hasSuit(leadSuit))
 			{
 				System.out.println("Lead suit is " + leadSuit.toString());
-				chooseCard(leadSuit);
+				//cardToPlay = chooseCard(leadSuit);
+				suitToPlay = leadSuit;
 				chosen = true;
 			}
 			else
@@ -82,6 +76,7 @@ public class HumanPlayer extends Player {
 			{
 				playCard(handBySuit.get(Suit.CLUBS).get(0));
 				chosen = true;
+				played = true;
 				System.out.println("\n***You had the 2 of Clubs. It's been played for you.***\n");
 			}
 		}
@@ -89,55 +84,17 @@ public class HumanPlayer extends Player {
 		// If suit hasn't been chosen yet
 		while(!chosen)
 		{
-			System.out.print("Choose your suit: ");
-			String suit = keyboard.next();
+			suitToPlay = chooseSuit();
 			
-			suit = suit.trim();
-			suit = suit.toLowerCase();
-			
-			if(suit.equals("clubs"))
+			if(handBySuit.get(suitToPlay).size() == 0)
 			{
-				if(clubs.size() == 0)
-				{
-					System.out.println("You're out of that suit");
-				} else {
-					//choose card
-					chooseCard(Suit.CLUBS);
-					chosen = true;
-				}
-			} 
-			else if(suit.equals("diamonds"))
-			{
-				if(diamonds.size() == 0)
-				{
-					System.out.println("You're out of that suit");
-				} else {
-					//choose card
-					chooseCard(Suit.DIAMONDS);
-					chosen = true;
-				}
+				System.out.println("You're out of that suit!");
 			}
-			else if(suit.equals("spades"))
+			else if(suitToPlay == Suit.HEARTS)
 			{
-				if(spades.size() == 0)
-				{
-					System.out.println("You're out of that suit");
-				} else {
-					//choose card
-					chooseCard(Suit.SPADES);
-					chosen = true;
-				}
-			}
-			else if(suit.equals("hearts"))
-			{
-				
 				if(myServer.getGame().getRoundsPlayed() == 0)
 				{
 					System.out.println("Can't play points on first round!");
-				}
-				else if(hearts.size() == 0)
-				{
-					System.out.println("You're out of that suit");
 				}
 				else if(!myServer.getGame().getHeartsBroken())
 				{
@@ -150,29 +107,75 @@ public class HumanPlayer extends Player {
 					}
 					else // otherwise I'm out of lead suit so I can break hearts
 					{
-						chooseCard(Suit.HEARTS);
 						chosen = true;
 					}
 				}
 				else
 				{
-					//choose card
-					chooseCard(Suit.HEARTS);
 					chosen = true;
 				}
 			}
-			else
+			else 
 			{
-				System.out.println("That's not a suit!");
+				chosen = true;
 			}
+			
 			System.out.println();
 		}
+		//Suit has been chosen so choose card now
+		
+		
+		while(!played){
+			cardToPlay = chooseCard(suitToPlay);
+			
+			// check if trying to play the queen of spades on first round
+			if(suitToPlay == Suit.SPADES && cardToPlay.getValue() == Value.QUEEN && myServer.getGame().getRoundsPlayed() == 0)
+			{
+				System.out.println("Can't play points on the first round. Even the Queen!");
+			}
+			else
+			{
+				playCard(cardToPlay);
+				played = true;
+			}
+		}				
 	}
 	
-	private void chooseCard(Suit suit)
+	public void passCardPrompt()
 	{
-		boolean played = false;
-		while(!played)
+		System.out.println("Choose 3 cards to pass to the " + myServer.getGame().getPassingDirection() + "\n");
+		System.out.println(printHand());
+		
+		System.out.print("Choose your suit: ");
+		String suit = keyboard.next();
+		suit = suit.trim();
+		suit = suit.toLowerCase();
+		
+		
+	}
+	
+	private Suit chooseSuit()
+	{
+		
+		String suit;
+		
+		while (true) {
+			System.out.print("Choose your suit: ");
+			suit = keyboard.next();
+			suit = suit.trim();
+			suit = suit.toLowerCase();
+			if(Suit.getSuitFromString(suit) != null)
+				break;
+			else
+				System.out.println("That's not a suit!");
+		}
+		return Suit.getSuitFromString(suit);
+		
+	}
+	
+	private Card chooseCard(Suit suit)
+	{
+		while(true)
 		{
 			System.out.println(printSuit(suit));
 			
@@ -191,16 +194,7 @@ public class HumanPlayer extends Player {
 			}
 			else
 			{
-				// check if trying to play the queen of spades on first round
-				if(suit == Suit.SPADES && handBySuit.get(suit).get(index-1).getValue() == Value.QUEEN && myServer.getGame().getRoundsPlayed() == 0)
-				{
-					System.out.println("Can't play points on the first round. Even the Queen!");
-				}
-				else
-				{
-					playCard(handBySuit.get(suit).get(index-1));
-					played = true;
-				}
+				return handBySuit.get(suit).get(index-1);
 			}
 		}
 	}
