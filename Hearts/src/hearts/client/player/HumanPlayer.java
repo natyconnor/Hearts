@@ -144,12 +144,19 @@ public class HumanPlayer extends Player {
 	public void passCardPrompt()
 	{
 		System.out.println("Choose 3 cards to pass to the " + myServer.getGame().getPassingDirection() + "\n");
-		System.out.println(printHand());
-		
-		System.out.print("Choose your suit: ");
-		String suit = keyboard.next();
-		suit = suit.trim();
-		suit = suit.toLowerCase();
+		for (int i = 0; i < 3; i++) {
+			System.out.println(printHand());
+			Suit suit = null;
+			while (true) {
+				suit = chooseSuit();
+				if (handBySuit.get(suit).size() == 0) {
+					System.out.println("You don't have any of that suit!");
+				} else {
+					break;
+				}
+			}
+			passCard(chooseCard(suit));
+		}
 		
 		
 	}

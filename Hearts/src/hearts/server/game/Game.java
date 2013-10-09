@@ -156,6 +156,7 @@ public class Game {
 	{
 		if(gameScores.contains(new Integer(26)))
 		{
+			System.out.println("Someone shot the moon!!");
 			for(int i = 0; i < numPlayers; i++)
 			{
 				if(gameScores.get(i) == 0)
@@ -165,12 +166,11 @@ public class Game {
 				else
 					System.out.print("Something is wrong with Score!");
 			}
-		} else {
-			for(int i = 0; i < numPlayers; i++)
-			{
-				matchScores.set(i, matchScores.get(i) + gameScores.get(i));
-				gameScores.set(i, 0);
-			}
+		}
+		for(int i = 0; i < numPlayers; i++)
+		{
+			matchScores.set(i, matchScores.get(i) + gameScores.get(i));
+			gameScores.set(i, 0);
 		}
 		
 		System.out.println("--------------------------------------\n");
