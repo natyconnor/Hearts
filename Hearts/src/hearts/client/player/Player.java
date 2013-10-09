@@ -57,6 +57,8 @@ abstract public class Player {
 	
 	public void sortHand()
 	{
+		bubbleSortCards(hand);
+		
 		for(Card c : hand)
 		{
 			if(c.getSuit() == Suit.CLUBS)
@@ -114,16 +116,7 @@ abstract public class Player {
 	
 	protected boolean hasSuit(Suit s)
 	{
-		if(s == Suit.CLUBS)
-			return clubs.size() > 0;
-		else if(s == Suit.DIAMONDS)
-			return diamonds.size() > 0;
-		else if(s == Suit.SPADES)
-			return spades.size() > 0;
-		else if(s == Suit.HEARTS)
-			return hearts.size() > 0;
-		else
-			return false;
+		return handBySuit.get(s).size() > 0;
 	}
 	
 	public boolean equals(Player p)
@@ -135,6 +128,8 @@ abstract public class Player {
 	
 	public abstract void playCardPrompt();
 	
+	public abstract void passCardPrompt();
+	
 	public Hashtable<Suit, ArrayList<Card>> getHandBySuit()
 	{
 		return handBySuit;
@@ -143,18 +138,31 @@ abstract public class Player {
 	public void playCard(Card c)
 	{
 		myServer.getGame().playCard(this, c);
-		//remove card from hand and 
+		//remove card from hand
+		remove(c);
+	}
+	
+	public void passCard(Card c)
+	{
+		myServer.getGame().passCard(this, c);
+		remove(c);
+		System.out.println("\n" + myName + " passed the " + c.toString());
+	}
+	
+	public void receiveCard(Card c)
+	{
+		hand.add(c);
+		bubbleSortCards(hand);
+		
+		handBySuit.get(c.getSuit()).add(c);
+		bubbleSortCards(handBySuit.get(c.getSuit()));
+		System.out.println("\n" + myName + " received the " + c.toString());
+	}
+	
+	protected void remove(Card c)
+	{
 		hand.remove(c);
-		if(c.getSuit() == Suit.CLUBS)
-			clubs.remove(c);
-		else if(c.getSuit() == Suit.DIAMONDS)
-			diamonds.remove(c);
-		else if(c.getSuit() == Suit.SPADES)
-			spades.remove(c);
-		else if(c.getSuit() == Suit.HEARTS)
-			hearts.remove(c);
-		else
-			System.out.print("Removing card doesn't have correct Suit!!");
+		handBySuit.get(c.getSuit()).remove(c);
 	}
 	
 	public String toString()

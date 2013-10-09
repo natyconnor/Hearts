@@ -10,11 +10,16 @@ public class Game {
 	private Deck  myDeck;
 	public static final int numPlayers = 4;
 	public static final int numRounds = Deck.numCards / numPlayers;
-	ArrayList<Player> myPlayers;
-	ArrayList<Integer> matchScores;
-	ArrayList<Integer> gameScores;
+	
+	private ArrayList<Player> myPlayers;
+	private ArrayList<Integer> matchScores;
+	private ArrayList<Integer> gameScores;
+	
+	private ArrayList<ArrayList<Card>> passingBuffers;
+	private PassDirection pd;
 	
 	private int roundsPlayed;
+	private int gamesPlayed;
 	private boolean heartsBroken;
 	private int leadPlayerNum;
 	
@@ -25,20 +30,27 @@ public class Game {
 		myPlayers = new ArrayList<Player>();
 		matchScores = new ArrayList<Integer>();
 		gameScores = new ArrayList<Integer>();
+		
+		passingBuffers = new ArrayList<ArrayList<Card>>();
+		pd = PassDirection.LEFT; 
+		
 		roundsPlayed = 0;
+		gamesPlayed = 0;
 		heartsBroken = false;
 		leadPlayerNum = -1;
 	}
 	
 	public void addPlayer(Player p)
 	{
-		if(myPlayers.size() == numPlayers)
+		if(myPlayers.size() >= numPlayers)
 		{
 			System.out.println("Sorry, max number of players already!");
 		} else {
 			myPlayers.add(p);
 			matchScores.add(0);
 			gameScores.add(0);
+			
+			passingBuffers.add(new ArrayList<Card>());
 		}
 	}
 	
@@ -59,7 +71,7 @@ public class Game {
 		}
 	}
 	
-	public void promptPlayers()
+	public void promptPlayCard()
 	{
 		if(leadPlayerNum == -1)
 		{
@@ -74,19 +86,54 @@ public class Game {
 			}
 			
 		}
-		
-		// Hackish while loop to loop around list
-		int numPlayed = 0;
+
+		//Go around table from lead player. Use modulo to get right index
 		int index = leadPlayerNum;
-		while(numPlayed < numPlayers)
+		for(int i = 0; i < numPlayers; i++)
 		{
-			myPlayers.get(index).playCardPrompt();
-			
+			myPlayers.get(index % numPlayers).playCardPrompt();
 			index++;
-			if(index >= numPlayers)
-				index = 0;
+		}
+	}
+	
+	public void promptPassCards()
+	{
+		for(Player p : myPlayers)
+		{
+			p.passCardPrompt();
+		}
+	}
+	
+	public void givePassCards()
+	{
+		for(int i = 0; i < passingBuffers.size(); i++)
+		{
 			
-			numPlayed++;
+			switch(pd)
+			{
+				case LEFT:
+					for(int j = 0; j < passingBuffers.get(i).size(); j++)
+					{
+						myPlayers.get((i+1) % 4).receiveCard(passingBuffers.get(i).get(j));
+					}
+					break;
+					
+				case RIGHT:
+					for(int j = 0; j < passingBuffers.get(i).size(); j++)
+					{
+						myPlayers.get(((i-1) % 4 + 4) % 4).receiveCard(passingBuffers.get(i).get(j));
+					}
+					break;
+				case ACROSS:
+					for(int j = 0; j < passingBuffers.get(i).size(); j++)
+					{
+						myPlayers.get((i+2) % 4).receiveCard(passingBuffers.get(i).get(j));
+					}
+					break;
+				default:
+					System.out.println("Not supposed to pass this round!");
+					break;
+			}
 		}
 	}
 	
@@ -98,6 +145,11 @@ public class Game {
 			heartsBroken = true;
 			System.out.println("\nHearts has been broken!\n");
 		}
+	}
+	
+	public void passCard(Player p, Card c)
+	{
+		passingBuffers.get(myPlayers.indexOf(p)).add(c);
 	}
 	
 	public void updateMatchScore()
@@ -155,6 +207,13 @@ public class Game {
 	public void newGame()
 	{
 		roundsPlayed = 0;
+		gamesPlayed++;
+		pd = PassDirection.DIRECTIONS.get(gamesPlayed % 4);
+		passingBuffers.clear();
+		for(int i = 0; i < numPlayers; i++)
+		{
+			passingBuffers.add(new ArrayList<Card>());
+		}
 		heartsBroken = false;
 		leadPlayerNum = -1;
 		myTable = new Table();
@@ -182,6 +241,22 @@ public class Game {
 		return highScore;
 	}
 	
+	public Player getWinningPlayer()
+	{
+		int lowScore = 1000;
+		int playerIndex = -1;
+		for(int i = 0; i < myPlayers.size(); i++)
+		{
+			int score = matchScores.get(i);
+			if(score < lowScore)
+			{
+				lowScore = score;
+				playerIndex = i;
+			}
+		}
+		return myPlayers.get(playerIndex);
+	}
+	
 	public Table getTable()
 	{
 		return myTable;
@@ -197,4 +272,8 @@ public class Game {
 		return myPlayers.toString();
 	}
 	
+	public PassDirection getPassingDirection()
+	{
+		return pd;
+	}
 }

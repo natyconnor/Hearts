@@ -12,7 +12,8 @@ public class Launcher {
 		Server server = new Server();
 		
 		//Add players to server/game
-		HumanPlayer h1 = new HumanPlayer("Player1");
+		//HumanPlayer h1 = new HumanPlayer("Player1");
+		ComputerPlayer h1 = new ComputerPlayer("Player1");
 		ComputerPlayer h2 = new ComputerPlayer("Player2");
 		ComputerPlayer h3 = new ComputerPlayer("Player3");
 		ComputerPlayer h4 = new ComputerPlayer("Player4");
@@ -37,12 +38,19 @@ public class Launcher {
 			//deal them
 			server.getGame().dealHand();
 			
+			//Have players pass cards
+			if(server.getGame().getPassingDirection() != PassDirection.KEEP)
+			{
+				server.getGame().promptPassCards();
+				server.getGame().givePassCards();
+			}
+			
 			//while there are still rounds
 			while(server.getGame().getRoundsPlayed() < Game.numRounds)
 			{
 			
 				//ask each player to play a card
-				server.getGame().promptPlayers();
+				server.getGame().promptPlayCard();
 				
 				//see who takes trick
 				int winningPlayer = server.getGame().getTable().takeTrick();
@@ -65,6 +73,9 @@ public class Launcher {
 			//reset for next game
 			server.getGame().newGame();
 		}
+		
+		System.out.println("Game Over!");
+		System.out.println(server.getGame().getWinningPlayer().toString() + " wins!!");
 	}
 
 }

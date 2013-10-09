@@ -13,16 +13,7 @@ public class HumanPlayer extends Player {
 	Scanner keyboard;
 	public static void main(String[] args)
 	{
-		ArrayList<Card> a = new ArrayList<Card>();
-		ArrayList<ArrayList<Card>> b = new ArrayList<ArrayList<Card>>();
-		Deck d = new Deck();
-		
-		a.add(d.getDeck().get(0));
-		b.add(a);
-		a.remove(0);
-		
-		System.out.println(("spads".equals(Suit.SPADES)));
-		
+		System.out.println((-1 % 4 + 4) % 4);
 	}
 	
 	public HumanPlayer()
@@ -53,6 +44,11 @@ public class HumanPlayer extends Player {
 		System.out.println(printHand());
 		
 		chooseSuit();
+		
+	}
+	
+	public void passCardPrompt()
+	{
 		
 	}
 	
@@ -135,7 +131,6 @@ public class HumanPlayer extends Player {
 			else if(suit.equals("hearts"))
 			{
 				
-				//TODO handle hearts not being broken but having only hearts in hand and leading
 				if(myServer.getGame().getRoundsPlayed() == 0)
 				{
 					System.out.println("Can't play points on first round!");

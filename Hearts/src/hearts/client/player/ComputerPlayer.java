@@ -1,5 +1,6 @@
 package hearts.client.player;
 
+import hearts.server.game.Card;
 import hearts.server.game.Suit;
 import hearts.server.game.Value;
 
@@ -23,6 +24,9 @@ public class ComputerPlayer extends Player {
 
 	@Override
 	public void playCardPrompt() {
+		if(hand.size() == 0)
+			System.out.println("Wait, I'm out of cards!!");
+		
 		Suit leadSuit = myServer.getGame().getTable().getLeadSuit();
 		
 		//if leading
@@ -137,4 +141,26 @@ public class ComputerPlayer extends Player {
 		
 	}
 
+	public void passCardPrompt() 
+	{
+		for(int i = 0; i < 3; i++)
+		{
+			passCard(getRandomLargeCard());
+		}
+	}
+	
+	
+	
+	private Card getRandomLargeCard()
+	{
+		// TODO refactor so this code is used in playCardPrompt()
+		while(true)
+		{
+			Suit suit = Suit.SUITS.get(r.nextInt(4));
+			if(handBySuit.get(suit).size() > 0)
+			{
+				return handBySuit.get(suit).get(handBySuit.get(suit).size()-1);
+			}
+		}
+	}
 }
