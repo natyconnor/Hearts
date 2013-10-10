@@ -12,8 +12,8 @@ public class Launcher {
 		Server server = new Server();
 		
 		//Add players to server/game
-		HumanPlayer h1 = new HumanPlayer("Player1");
-		//ComputerPlayer h1 = new ComputerPlayer("Player1");
+		//HumanPlayer h1 = new HumanPlayer("Player1");
+		ComputerPlayer h1 = new ComputerPlayer("Player1");
 		ComputerPlayer h2 = new ComputerPlayer("Player2");
 		ComputerPlayer h3 = new ComputerPlayer("Player3");
 		ComputerPlayer h4 = new ComputerPlayer("Player4");

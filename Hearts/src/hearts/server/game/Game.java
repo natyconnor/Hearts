@@ -108,31 +108,9 @@ public class Game {
 	{
 		for(int i = 0; i < passingBuffers.size(); i++)
 		{
-			
-			switch(pd)
+			for(int j = 0; j < passingBuffers.get(i).size(); j++)
 			{
-				case LEFT:
-					for(int j = 0; j < passingBuffers.get(i).size(); j++)
-					{
-						myPlayers.get((i+1) % 4).receiveCard(passingBuffers.get(i).get(j));
-					}
-					break;
-					
-				case RIGHT:
-					for(int j = 0; j < passingBuffers.get(i).size(); j++)
-					{
-						myPlayers.get(((i-1) % 4 + 4) % 4).receiveCard(passingBuffers.get(i).get(j));
-					}
-					break;
-				case ACROSS:
-					for(int j = 0; j < passingBuffers.get(i).size(); j++)
-					{
-						myPlayers.get((i+2) % 4).receiveCard(passingBuffers.get(i).get(j));
-					}
-					break;
-				default:
-					System.out.println("Not supposed to pass this round!");
-					break;
+				myPlayers.get((i + pd.getIndexVal() % 4 + 4) % 4).receiveCard(passingBuffers.get(i).get(j));
 			}
 		}
 	}
@@ -144,6 +122,8 @@ public class Game {
 		if(c.getSuit() == Suit.HEARTS && heartsBroken == false){
 			heartsBroken = true;
 			System.out.println("\nHearts has been broken!\n");
+		} else if(c.getSuit() == Suit.SPADES && c.getValue() == Value.QUEEN) {
+			System.out.println("\nThe Queen of Spades has been played\n");
 		}
 	}
 	
