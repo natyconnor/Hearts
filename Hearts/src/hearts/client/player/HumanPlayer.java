@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class HumanPlayer extends Player {
 
 	Scanner keyboard;
+	HumanPlayerGUI gui;
 	public static void main(String[] args)
 	{
 		System.out.println((-1 % 4 + 4) % 4);
@@ -24,6 +25,7 @@ public class HumanPlayer extends Player {
 	{
 		super(name);
 		keyboard = new Scanner(System.in);
+		gui = new HumanPlayerGUI(myName, "Player 1", "Player 2", "Player 3");
 	}
 
 	@Override

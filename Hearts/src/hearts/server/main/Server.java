@@ -1,6 +1,7 @@
 package hearts.server.main;
 
 import hearts.client.player.ComputerPlayer;
+import hearts.client.player.HumanPlayer;
 import hearts.server.game.Game;
 import hearts.server.game.PassDirection;
 
@@ -13,8 +14,8 @@ public class Server {
 		
 		//temp setup for one game and one thread
 		//Add players to server/game
-				//HumanPlayer h1 = new HumanPlayer("Player1");
-		ComputerPlayer h1 = new ComputerPlayer("Player1");
+		HumanPlayer h1 = new HumanPlayer("Player1");
+		//ComputerPlayer h1 = new ComputerPlayer("Player1");
 		ComputerPlayer h2 = new ComputerPlayer("Player2");
 		ComputerPlayer h3 = new ComputerPlayer("Player3");
 		ComputerPlayer h4 = new ComputerPlayer("Player4");
